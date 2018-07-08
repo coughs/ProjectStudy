@@ -1,9 +1,13 @@
 /**
- * 
+ *
  */
-var sketchProc=function(processingInstance){ with (processingInstance){
-size(400, 400); 
-frameRate(30);
+
+var sketchProc1=function(processingInstance){ with (processingInstance){
+
+    import {mousePressed} from "./processing-1.4.8";
+
+    size(400, 400);
+    frameRate(30);
 
 
     //ProgramCodeGoesHere
@@ -41,7 +45,11 @@ frameRate(30);
     var bY = 1;
     draw = function(//x, y
     ){
-        var distance = 2;
+//        mousePressed();
+//        var p = mousePressed();
+
+        var p = mousePressed + mouseReleased + mouseClicked;
+        println(p);
         background(backColor);
         drawFish(centerX, centerY, bodyLength,bodyHeight,bodyColor);
         drawFish(mouseX,y, x,mouseY,color(162, 0, 255));
