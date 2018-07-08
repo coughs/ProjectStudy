@@ -151,14 +151,17 @@ frameRate(30);
 
 // stores which keys are being pressed
     var keysPressed = [];
+    var keyIsPressed = false;
 
 // returns a value of true in the keyPressed array when a key is pressed
-    keyPressed = function() {
+    var keyPressed = function() {
         keysPressed[keyCode] = true;
+        keyIsPressed = true;
     };
 
 // returns a value of false in the keyPressed array when a key is pressed
-    keyReleased = function() {
+    var keyReleased = function() {
+        keyIsPressed = false;
         keysPressed[keyCode] = false;
     };
 
@@ -1188,6 +1191,33 @@ frameRate(30);
             }
         }
     }
+
+    var mouseIsPressed = false;
+
+    var mouse=[];
+    mousePressed=function(){
+        mouse[mouseButton]=true;
+        mouseIsPressed = true;
+    };
+    mouseReleased=function(){
+        mouse[mouseButton]=false;
+        mouseIsPressed = false;
+        return true;
+    };
+
+    var keys=[];
+    var keyPressed=function(){
+        keys[keyCode]=true;
+
+        keysPressed[keyCode] = true;
+        keyIsPressed = true;
+    };
+    var keyReleased=function(){
+        keys[keyCode]=false;
+
+            keysPressed[keyCode] = false;
+            keyIsPressed = false;
+    };
 
 
     draw = function() {
