@@ -2,8 +2,8 @@
  * 
  */
 var sketchProc=function(processingInstance){ with (processingInstance){
-size(400, 400); 
-frameRate(30);
+/*    size(400, 400);
+    frameRate(30);
 
 
     //ProgramCodeGoesHere
@@ -69,7 +69,7 @@ frameRate(30);
 
     //swim (273, 177);
 
-
+*/
 }};
 
 
