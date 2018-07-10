@@ -83,12 +83,31 @@
 
 
 <script type="application/javascript">
-    var sketchProc=function(processingInstance){ with (processingInstance){
-        size(400, 400);
-        frameRate(30);
+    var sketchProc=function(processingInstance){
+        var keyReleased;
+        var keyPressed;
+        with (processingInstance) {
+            size(400, 400);
+            frameRate(30);
 
 
-        //ProgramCodeGoesHere
+            //ProgramCodeGoesHere
+
+            // stores which keys are being pressed
+            var keysPressed = [];
+            var keyIsPressed = false;
+
+            // returns a value of true in the keyPressed array when a key is pressed
+             keyPressed = function () {
+                keysPressed[keyCode] = true;
+                keyIsPressed = true;
+            };
+
+            // returns a value of false in the keyPressed array when a key is pressed
+            keyReleased = function () {
+                keyIsPressed = false;
+                keysPressed[keyCode] = false;
+            };
 
 
         var player1Y = height/2;
@@ -101,8 +120,8 @@
 
 //Constants
         var PAUSE_TIME = 60;
-        var PLAYER_MOVE_SPEED = 2;
-        var BALL_SPEED = 2.5;
+        var PLAYER_MOVE_SPEED = 6;
+        var BALL_SPEED = 7.5;
         var PADDLE_HEIGHT = 100;
         var PADDLE_WIDTH = 20;
 
@@ -197,10 +216,10 @@
                 player2Y = ball.position.y;
             }
             else if (player2Y-ball.position.y >= PLAYER_MOVE_SPEED) {
-                player2Y -= PLAYER_MOVE_SPEED;
+                player2Y -= PLAYER_MOVE_SPEED / 2;
             }
             else if (player2Y-ball.position.y <= PLAYER_MOVE_SPEED) {
-                player2Y += PLAYER_MOVE_SPEED;
+                player2Y += PLAYER_MOVE_SPEED / 2;
             }
 
         };
