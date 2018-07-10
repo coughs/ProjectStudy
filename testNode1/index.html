@@ -89,72 +89,192 @@
 
 
         //ProgramCodeGoesHere
-        var backColor = color(89, 216, 255);
-        background(backColor);
 
-        var centerX = 200;
-        var centerY = 100;
-        var bodyLength = 118;
-        var bodyHeight = 74;
-        var bodyColor = color(162, 0, 255);
-        noStroke();
-        //    stroke(154, 163, 33);
 
-        var drawFish=function(centerX, centerY, bodyLength,bodyHeight,bodyColor){
-            fill(bodyColor);
-            // body
-            ellipse(centerX, centerY, bodyLength, bodyHeight);
-            // tail
-            var tailWidth = bodyLength/4;
-            var tailHeight = bodyHeight/2;
-            triangle(centerX-bodyLength/2, centerY,
-                centerX-bodyLength/2-tailWidth, centerY-tailHeight,
-                centerX-bodyLength/2-tailWidth, centerY+tailHeight);
-            // eye
-            fill(33, 33, 33);
-            ellipse(centerX+bodyLength/4, centerY, bodyHeight/5, bodyHeight/5);
+        var player1Y = height/2;
+        var player2Y = height/2;
+        var player1Score = 0;
+        var player2Score = 0;
+        var ball;
+        var gameStarted = false;
+        var t = 0;
+
+//Constants
+        var PAUSE_TIME = 60;
+        var PLAYER_MOVE_SPEED = 2;
+        var BALL_SPEED = 2.5;
+        var PADDLE_HEIGHT = 100;
+        var PADDLE_WIDTH = 20;
+
+        angleMode = "degrees";
+
+        var Ball = function(position, speed) {
+            this.position = position;
+            this.speed = speed || BALL_SPEED;
+
+            this.radius = 12;
+
+            this.resetVelocity = function() {
+                this.theta = random(0, 360);
+                this.velocity = new PVector(
+                    this.speed*cos(this.theta), -this.speed*sin(this.theta));
+                player2Y = height/2;
+            };
+            this.resetVelocity();
+
+            this.draw = function() {
+                fill(255, 255, 255);
+                noStroke();
+                ellipse(this.position.x, this.position.y,
+                    this.radius*2, this.radius*2);
+            };
+
+            this.collideWithPaddle = function(x, y) {
+                if (this.position.x - this.radius < x + PADDLE_WIDTH/2 &&
+                    this.position.x + this.radius > x - PADDLE_WIDTH/2) {
+                    if (dist(0, this.position.y, 0, y) <
+                        PADDLE_HEIGHT/2 + this.radius) {
+                        if (this.position.x > x) {
+                            this.position.x = x +
+                                this.radius + PADDLE_WIDTH/2;
+                        }
+                        else if (this.position.x < x) {
+                            this.position.x = x -
+                                this.radius - PADDLE_WIDTH/2;
+                        }
+                        this.velocity.mult(new PVector(-1, 1));
+                    }
+                }
+            };
+
+            this.update = function() {
+                //Handle wall collisions
+                if (this.position.x < 0) {
+                    player2Score++;
+                    this.position = new PVector(width/2, height/2);
+                    gameStarted = false;
+                    this.resetVelocity();
+                }
+                else if (this.position.x > width) {
+                    player1Score++;
+                    this.position = new PVector(width/2, height/2);
+                    gameStarted = false;
+                    this.resetVelocity();
+                }
+                if (this.position.y < 0) {
+                    this.position.y = 0;
+                    this.velocity.mult(new PVector(1, -1));
+                }
+                else if (this.position.y > height) {
+                    this.position.y = height;
+                    this.velocity.mult(new PVector(1, -1));
+                }
+
+                //Handle paddle collisions
+                this.collideWithPaddle(20, player1Y);
+                this.collideWithPaddle(width-20, player2Y);
+
+                this.position.add(this.velocity);
+            };
         };
 
-        //drawFish(centerX, centerY, bodyLength,bodyHeight,bodyColor);
-        var x=273;
-        var y=177;
+        ball = new Ball(new PVector(width/2, height/2));
 
-        var bX = 1;
-        var bY = 1;
-        draw = function(//x, y
-        ){
-            var distance = 2;
-            background(backColor);
+        var drawScores = function() {
+            var s;
+
+            fill(255, 255, 255);
+            textSize(20);
+
+            s = "Player 1: " + player1Score;
+            text(s, width*0.25-textWidth(s)/2, 25);
+            s = "Player 2: " + player2Score;
+            text(s, width*0.75-textWidth(s)/2, 25);
+        };
+
+        var updatePlayer2 = function() {
+            if (abs(player2Y-ball.position.y) < PLAYER_MOVE_SPEED){
+                player2Y = ball.position.y;
+            }
+            else if (player2Y-ball.position.y >= PLAYER_MOVE_SPEED) {
+                player2Y -= PLAYER_MOVE_SPEED;
+            }
+            else if (player2Y-ball.position.y <= PLAYER_MOVE_SPEED) {
+                player2Y += PLAYER_MOVE_SPEED;
+            }
+
+        };
+
+//Move the player up
+        var movePlayerUp = function() {
+            player1Y -= PLAYER_MOVE_SPEED;
+        };
+
+//Move the player down
+        var movePlayerDown = function() {
+            player1Y += PLAYER_MOVE_SPEED;
+        };
+
+        var drawPlayers = function() {
+            //Constrain the player movement
+            player1Y = constrain(player1Y, 0, 400);
+
+
+            rectMode(CENTER);
+            fill(255, 255, 255);
+            rect(20, player1Y, PADDLE_WIDTH, PADDLE_HEIGHT);
+            rect(width-20, player2Y, PADDLE_WIDTH, PADDLE_HEIGHT);
+        };
+
+        draw = function() {
+            //Control Player 1
+
+            if (keyIsPressed) {
+                if (keyCode ===UP) {
+                    movePlayerUp();
+                }
+                else if (keyCode ===DOWN) {
+                    movePlayerDown();
+                }
+            }
+
+            //Draw the environment
+            background(0, 0, 0);
+            updatePlayer2();
+            drawPlayers();
+            drawScores();
+            stroke(255, 255, 255);
+            line(width/2, 0, width/2, height);
+
+            //Draw the ball
+            ball.draw();
+
+            if (!gameStarted) {
+                t++;
+                if (t >= PAUSE_TIME) {
+                    t = 0;
+                    gameStarted = true;
+                }
+                return;
+            }
+
+            ball.update();
+//        };
+
+
+//        draw = function(//x, y
+//        ){
+//            var distance = 2;
+//            background(backColor);
 
             var txt = $('#edit')[0].childNodes[1].innerText;
             // txt = '';
             println(txt);
 
-            drawFish(centerX, centerY, bodyLength,bodyHeight,bodyColor);
-            drawFish(mouseX,y, x,mouseY,color(162, 0, 255));
-            //var bX = 1;
-            if (x>300){
-                bX=-distance;
-            }
-            if(x<20){
-                bX=distance;
-            }
-            x+=1*bX;
-
-            //var bY = 1;
-            if (y>300){
-                bY=-distance;
-            }
-            if(y<20){
-                bY=distance;
-            }
-
-            y+=1.5*bY;
-
-            drawFish(x,y, 184,59,color(0, 247, 255));
         };
 
-        //swim (273, 177);
+
+
 
 
     }};
