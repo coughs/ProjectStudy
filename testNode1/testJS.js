@@ -2,9 +2,9 @@
  *
  */
 
-var sketchProc1=function(processingInstance){ with (processingInstance){
+var sketchProc=function(processingInstance){ with (processingInstance){
 
-    import {mousePressed} from "./processing-1.4.8";
+ //   import {mousePressed} from "./processing-1.4.8";
 
     size(400, 400);
     frameRate(30);
