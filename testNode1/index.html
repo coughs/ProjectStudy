@@ -121,7 +121,7 @@
 //Constants
         var PAUSE_TIME = 60;
         var PLAYER_MOVE_SPEED = 6;
-        var BALL_SPEED = 7.5;
+        var BALL_SPEED = 10;
         var PADDLE_HEIGHT = 100;
         var PADDLE_WIDTH = 20;
 
@@ -135,6 +135,31 @@
 
             this.resetVelocity = function() {
                 this.theta = random(0, 360);
+                this.theta = random(0.4, 1.1);
+
+                var circle = random(0,4);
+                if(circle >3){
+                    this.theta = this.theta + 4.7;
+                }
+                else if(circle >2)
+                {
+                    this.theta = this.theta + 3.1;
+                }
+                  else if(circle >1)
+                {
+                    this.theta = this.theta + 1.6;
+
+                }
+//                circle.toInt();
+//                this.theta = 1.1;
+//                this.theta = 0.4;
+/*
+                for(var i=0,j=0; i<3600;i+=15.7,j++){
+                    var s=sin(i*0.1);
+                    text("sin("+i*0.1 + ") "+s +" cos("+cos(i*0.1), 30 , 25 + j*20);
+
+                }
+*/
                 this.velocity = new PVector(
                     this.speed*cos(this.theta), -this.speed*sin(this.theta));
                 player2Y = height/2;
