@@ -1,8 +1,8 @@
 /**
- * 
+ *
  */
 var sketchProc=function(processingInstance){ with (processingInstance){
-size(400, 400); 
+size(400, 400);
 frameRate(30);
 
 
@@ -13,6 +13,8 @@ frameRate(30);
     var Walker = function() {
         this.x = width/2;
         this.y = height/2;
+
+        this.workerWidth = 7;
     };
 
     Walker.prototype.display = function() {
@@ -23,22 +25,21 @@ frameRate(30);
         fill(random(256), random(256), random(256));
         fill(random(100), 0, random(100) + 150);
         fill(random(100) + 150, 100, random(100) + 150);
-        rect(this.x+1, this.y+1, workerWidth-2, workerWidth-2);
+        rect(this.x+1, this.y+1, this.workerWidth-2, this.workerWidth-2);
 //        point(this.x, this.y);
     };
 
-    var workerWidth = 7;
     // Randomly move up, down, left, right, or stay in one place
     Walker.prototype.walk = function() {
         var choice = floor(random(4));
         if (choice === 0) {
-            this.x+=workerWidth;
+            this.x+=this.workerWidth;
         } else if (choice === 1) {
-            this.x-=workerWidth;
+            this.x-=this.workerWidth;
         } else if (choice === 2) {
-            this.y+=workerWidth;
+            this.y+=this.workerWidth;
         } else {
-            this.y-=workerWidth;
+            this.y-=this.workerWidth;
         }
     };
 
