@@ -50,13 +50,8 @@ frameRate(30);
     draw = function() {
 
         w.walk();
-
         w.display();
-
-/*
-        background(100,100,100);
-        text("X: "+mouseX+",Y:"+mouseY,20,20);
-*/ };
+    };
 
 
 
